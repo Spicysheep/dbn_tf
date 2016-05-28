@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import input_data
-import Image
+#import Image
 from util import tile_raster_images
 
 
@@ -50,8 +50,8 @@ n_hb = np.zeros([500], np.float32)
 o_w = np.zeros([784, 500], np.float32)
 o_vb = np.zeros([784], np.float32)
 o_hb = np.zeros([500], np.float32)
-print sess.run(
-    err_sum, feed_dict={X: trX, rbm_w: o_w, rbm_vb: o_vb, rbm_hb: o_hb})
+print(sess.run(
+    err_sum, feed_dict={X: trX, rbm_w: o_w, rbm_vb: o_vb, rbm_hb: o_hb}))
 
 for start, end in zip(
         range(0, len(trX), batchsize), range(batchsize, len(trX), batchsize)):
@@ -66,8 +66,8 @@ for start, end in zip(
     o_vb = n_vb
     o_hb = n_hb
     if start % 10000 == 0:
-        print sess.run(
-            err_sum, feed_dict={X: trX, rbm_w: n_w, rbm_vb: n_vb, rbm_hb: n_hb})
+        print(sess.run(
+            err_sum, feed_dict={X: trX, rbm_w: n_w, rbm_vb: n_vb, rbm_hb: n_hb}))
         image = Image.fromarray(
             tile_raster_images(
                 X=n_w.T,
