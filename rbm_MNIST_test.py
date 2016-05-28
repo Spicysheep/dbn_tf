@@ -1,17 +1,14 @@
 import tensorflow as tf
 import numpy as np
 import input_data
-#import Image
 from PIL import Image
 from util import tile_raster_images
 
 
-def sample_prob(probs):
-    return tf.nn.relu(
-        tf.sign(
-            probs - tf.random_uniform(tf.shape(probs))))
+def sample_prob(probs): # I"m not sure what the sampling is for
+    return tf.nn.relu(tf.sign(probs - tf.random_uniform(tf.shape(probs))))
 
-alpha = 1.0
+alpha = 1.0 # I'm not sure what alpha is for
 batchsize = 100
 
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
@@ -51,8 +48,7 @@ n_hb = np.zeros([500], np.float32)
 o_w = np.zeros([784, 500], np.float32)
 o_vb = np.zeros([784], np.float32)
 o_hb = np.zeros([500], np.float32)
-print(sess.run(
-    err_sum, feed_dict={X: trX, rbm_w: o_w, rbm_vb: o_vb, rbm_hb: o_hb}))
+print(sess.run(err_sum, feed_dict={X: trX, rbm_w: o_w, rbm_vb: o_vb, rbm_hb: o_hb}))
 
 for start, end in zip(
         range(0, len(trX), batchsize), range(batchsize, len(trX), batchsize)):
@@ -69,11 +65,13 @@ for start, end in zip(
     if start % 10000 == 0:
         print(sess.run(
             err_sum, feed_dict={X: trX, rbm_w: n_w, rbm_vb: n_vb, rbm_hb: n_hb}))
+        pictures_tall = 25
+        pictures_wide = 20
         image = Image.fromarray(
             tile_raster_images(
                 X=n_w.T,
                 img_shape=(28, 28),
-                tile_shape=(25, 20),
+                tile_shape=(pictures_tall, pictures_wide),
                 tile_spacing=(1, 1)
             )
         )
