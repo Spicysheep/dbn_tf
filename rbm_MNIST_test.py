@@ -4,7 +4,6 @@ import input_data
 from PIL import Image
 from util import tile_raster_images
 
-
 def sample_prob(probs): # I"m not sure what the sampling is for
     return tf.nn.relu(tf.sign(probs - tf.random_uniform(tf.shape(probs))))
 
@@ -12,8 +11,11 @@ alpha = 1.0 # I'm not sure what alpha is for
 batchsize = 100
 
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
-trX, trY, teX, teY = mnist.train.images, mnist.train.labels, mnist.test.images,\
-    mnist.test.labels
+
+# Only the inputs, train_X, are used here since this is 
+# unsupervised learning. No targets are used. The test 
+# set is alos not used
+train_X = mnist.train.images
 
 X = tf.placeholder("float", [None, 784])
 Y = tf.placeholder("float", [None, 10])
@@ -48,11 +50,11 @@ n_hb = np.zeros([500], np.float32)
 o_w = np.zeros([784, 500], np.float32)
 o_vb = np.zeros([784], np.float32)
 o_hb = np.zeros([500], np.float32)
-print(sess.run(err_sum, feed_dict={X: trX, rbm_w: o_w, rbm_vb: o_vb, rbm_hb: o_hb}))
+print(sess.run(err_sum, feed_dict={X: train_X, rbm_w: o_w, rbm_vb: o_vb, rbm_hb: o_hb}))
 
 for start, end in zip(
-        range(0, len(trX), batchsize), range(batchsize, len(trX), batchsize)):
-    batch = trX[start:end]
+        range(0, len(train_X), batchsize), range(batchsize, len(train_X), batchsize)):
+    batch = train_X[start:end]
     n_w = sess.run(update_w, feed_dict={
                    X: batch, rbm_w: o_w, rbm_vb: o_vb, rbm_hb: o_hb})
     n_vb = sess.run(update_vb, feed_dict={
@@ -64,7 +66,7 @@ for start, end in zip(
     o_hb = n_hb
     if start % 10000 == 0:
         print(sess.run(
-            err_sum, feed_dict={X: trX, rbm_w: n_w, rbm_vb: n_vb, rbm_hb: n_hb}))
+            err_sum, feed_dict={X: train_X, rbm_w: n_w, rbm_vb: n_vb, rbm_hb: n_hb}))
         pictures_tall = 25
         pictures_wide = 20
         image = Image.fromarray(
