@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import input_data
 #import Image
+from PIL import Image
 from util import tile_raster_images
 
 
