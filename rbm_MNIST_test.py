@@ -18,7 +18,6 @@ mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 train_X = mnist.train.images
 
 X = tf.placeholder("float", [None, 784])
-Y = tf.placeholder("float", [None, 10])
 
 rbm_w = tf.placeholder("float", [784, 500])
 rbm_vb = tf.placeholder("float", [784])
@@ -55,12 +54,9 @@ print(sess.run(err_sum, feed_dict={X: train_X, rbm_w: o_w, rbm_vb: o_vb, rbm_hb:
 for start, end in zip(
         range(0, len(train_X), batchsize), range(batchsize, len(train_X), batchsize)):
     batch = train_X[start:end]
-    n_w = sess.run(update_w, feed_dict={
-                   X: batch, rbm_w: o_w, rbm_vb: o_vb, rbm_hb: o_hb})
-    n_vb = sess.run(update_vb, feed_dict={
-                    X: batch, rbm_w: o_w, rbm_vb: o_vb, rbm_hb: o_hb})
-    n_hb = sess.run(update_hb, feed_dict={
-                    X: batch, rbm_w: o_w, rbm_vb: o_vb, rbm_hb: o_hb})
+    n_w = sess.run(update_w, feed_dict={X: batch, rbm_w: o_w, rbm_vb: o_vb, rbm_hb: o_hb})
+    n_vb = sess.run(update_vb, feed_dict={X: batch, rbm_w: o_w, rbm_vb: o_vb, rbm_hb: o_hb})
+    n_hb = sess.run(update_hb, feed_dict={X: batch, rbm_w: o_w, rbm_vb: o_vb, rbm_hb: o_hb})
     o_w = n_w
     o_vb = n_vb
     o_hb = n_hb
